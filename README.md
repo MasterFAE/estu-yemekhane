@@ -1,6 +1,6 @@
 # ESTU - Yemekhane
 
-I wanted to create dinner reservation system for Eskisehir Technical University with modern UI.
+Dinner reservation system for Eskisehir Technical University with modern UI and technologies.
 
 # Technologies:
 
