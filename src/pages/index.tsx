@@ -6,12 +6,13 @@ import { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+
 const Home: NextPage = () => {
   const [value, onChange] = useState(new Date());
   return (
     <Layout>
       {/* User component */}
-      <div className="flex flex-row gap-x-4 bg-neutral-100 p-2">
+      <section className="flex flex-row gap-x-4 bg-neutral-100 p-2">
         <div className="h-16 w-16 rounded-full bg-gray-600"></div>
         <div className="flex flex-col gap-1 text-gray-800">
           <h1 className="text-lg font-semibold ">Sinan Gürcan</h1>
@@ -25,14 +26,18 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
       {/* Calendar */}
-      <div>
+      <section>
         <FullCalendar
+          locale={"tr"}
+          weekends={false}
+          initialView={"dayGridMonth"}
           plugins={[dayGridPlugin, interactionPlugin]}
           dateClick={() => console.log(123)}
+          dayHeaderClassNames="bg-blue-100 text-gray-800"
         />
-      </div>
+      </section>
     </Layout>
   );
 };
