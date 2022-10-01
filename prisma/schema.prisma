@@ -54,6 +54,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   reservation   ReservedDine[]
+  cart          Cart?
 }
 
 model VerificationToken {
@@ -81,15 +82,35 @@ enum DINEHOURS {
   DINNER
 }
 
+model Cart {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  dine      Dine[]
+  total     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@id([userId])
+}
+
 model Dine {
   id           Int            @id @default(autoincrement())
   foods        Food[]
   reservations ReservedDine[]
   date         DINEHOURS
+  cart         Cart[]
+}
+
+enum FoodType {
+  SOUP
+  MAIN
+  SIDE
+  EXTRA
 }
 
 model Food {
-  id    Int    @id @default(autoincrement())
-  label String @db.Text
+  id    Int      @id @default(autoincrement())
+  label String   @db.Text
+  type  FoodType
   dine  Dine[]
 }

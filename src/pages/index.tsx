@@ -1,20 +1,17 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Layout from "../components/Layout";
-import Calendar from "react-calendar";
 import { useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
+import CustomCalendar from "../components/Calendar/CustomCalendar";
 
 const Home: NextPage = () => {
   const [value, onChange] = useState(new Date());
+
   return (
     <Layout>
       {/* User component */}
-      <section className="flex flex-row gap-x-4 bg-neutral-100 p-2">
-        <div className="h-16 w-16 rounded-full bg-gray-600"></div>
-        <div className="flex flex-col gap-1 text-gray-800">
+      <section className="flex flex-row gap-x-4 bg-neutral-900 p-2">
+        <div className="h-16 w-16 rounded-full bg-neutral-600"></div>
+        <div className="flex flex-col gap-1 text-neutral-200">
           <h1 className="text-lg font-semibold ">Sinan Gürcan</h1>
           <h4 className="text-sm">BILGISAYAR MUHENDISLIGI</h4>
           <div className="flex flex-row gap-x-2">
@@ -29,14 +26,7 @@ const Home: NextPage = () => {
       </section>
       {/* Calendar */}
       <section>
-        <FullCalendar
-          locale={"tr"}
-          weekends={false}
-          initialView={"dayGridMonth"}
-          plugins={[dayGridPlugin, interactionPlugin]}
-          dateClick={() => console.log(123)}
-          dayHeaderClassNames="bg-blue-100 text-gray-800"
-        />
+        <CustomCalendar />
       </section>
     </Layout>
   );

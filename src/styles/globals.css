@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .food-label {
+    @apply truncate p-2 text-center text-[17px] text-neutral-100 odd:bg-neutral-700 even:bg-neutral-800;
+  }
+}
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: "Roboto";
+  color: rgb(245 245 245);
 }
