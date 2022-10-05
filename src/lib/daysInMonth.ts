@@ -3,7 +3,6 @@ import { _days } from "./getDaysArray";
 
 function daysInMonth(month: number, year: number) {
   var date = new Date(year, month, 1);
-  let now = Date.now();
   var days = [];
   while (date.getMonth() === month) {
     let dateName = date.toDateString();
@@ -15,10 +14,9 @@ function daysInMonth(month: number, year: number) {
       date.setDate(date.getDate() + 1);
       continue;
     }
-    days.push(new Date(date));
+    days.push({ id: date.toLocaleDateString("en-CA"), date: new Date(date) });
     date.setDate(date.getDate() + 1);
   }
-  console.log(Date.now() - now);
   return days;
 }
 

@@ -4,7 +4,7 @@ import DayComponent from "./DayComponent";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import getDaysArray from "../../lib/getDaysArray";
 
-type Props = {};
+type Props = { data: any[] };
 const month = [
   "January",
   "February",
@@ -24,11 +24,10 @@ const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
   const [days, setDays] = useState(
-    getDaysArray(currentMonth, date.getFullYear())
+    getDaysArray(props.data, currentMonth, date.getFullYear())
   );
-
   useEffect(() => {
-    setDays(getDaysArray(currentMonth, date.getFullYear()));
+    setDays(getDaysArray(props.data, currentMonth, date.getFullYear()));
   }, [currentMonth]);
   return (
     <div className="flex flex-col">
@@ -40,7 +39,7 @@ const CustomCalendar = (props: Props) => {
             size={12}
           />
         )}
-        <h1 className="w-24 select-none border-b-2 border-blue-300 text-center text-lg font-semibold text-gray-700">
+        <h1 className="w-24 select-none border-b-2 border-blue-300 text-center text-lg font-semibold text-neutral-200">
           {month[currentMonth]}
         </h1>
         {currentMonth < 11 && (
@@ -51,12 +50,13 @@ const CustomCalendar = (props: Props) => {
           />
         )}
       </div>
-      <div className="grid grid-cols-5 gap-2 rounded-lg bg-neutral-900 p-2">
+      <div className="grid grid-cols-1 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
         {days.map((element, key) => {
           return (
             <DayComponent
-              day={element}
-              key={key}
+              day={element.date}
+              dine={element.dine}
+              key={element.id}
               dayNo={key + 1}></DayComponent>
           );
         })}

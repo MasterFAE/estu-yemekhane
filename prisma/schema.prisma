@@ -14,10 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
-  id String @id @default(cuid())
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -47,9 +43,12 @@ model Session {
 
 model User {
   id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
+  name          String         @unique
+  email         String         @unique
+  password      String
   emailVerified DateTime?
+  civId         String         @default("")
+  department    String         @default("")
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -97,8 +96,9 @@ model Dine {
   id           Int            @id @default(autoincrement())
   foods        Food[]
   reservations ReservedDine[]
-  date         DINEHOURS
+  type         DINEHOURS
   cart         Cart[]
+  date         DateTime       @default(now())
 }
 
 enum FoodType {

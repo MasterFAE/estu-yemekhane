@@ -3,9 +3,33 @@ import Image from "next/image";
 import { Form, Field, Formik } from "formik";
 import bg from "../images/bg.jpg";
 import logo from "../images/estulogo.png";
-type Props = {};
+import {
+  getCsrfToken,
+  getProviders,
+  getSession,
+  signIn,
+} from "next-auth/react";
+import Router from "next/router";
+type Props = {
+  providers: any;
+  csrfToken: any;
+};
 
-const login = (props: Props) => {
+const Login = (props: Props) => {
+  const { providers, csrfToken } = props;
+  const handleSubmit = async (values: {
+    username: string;
+    password: string;
+  }) => {
+    const login = await signIn("credentials", {
+      redirect: false,
+      username: values.username,
+      password: values.password,
+      csrfToken,
+    });
+    if (login?.ok) Router.push("/");
+    return;
+  };
   return (
     <main
       className="flex h-screen w-full items-center justify-center  bg-cover"
@@ -19,8 +43,14 @@ const login = (props: Props) => {
         </div>
         <Formik
           initialValues={{ username: "", password: "" }}
-          onSubmit={async (values) => {}}>
+          onSubmit={handleSubmit}>
           <Form className="m-auto flex w-full flex-col self-center lg:w-2/3">
+            <input
+              readOnly={true}
+              name="csrfToken"
+              className="hidden"
+              value={csrfToken}
+            />
             <label
               htmlFor="username"
               className="mt-2 text-base font-bold text-gray-700">
@@ -56,4 +86,19 @@ const login = (props: Props) => {
   );
 };
 
-export default login;
+Login.getInitialProps = async (ctx) => {
+  const { req, res } = ctx;
+  const session = await getSession({ req });
+  if (session && res && session.user?.id) {
+    res.writeHead(302, { Location: "/" });
+    res.end();
+    return;
+  }
+  return {
+    session: undefined,
+    providers: await getProviders(),
+    csrfToken: await getCsrfToken(ctx),
+  };
+};
+
+export default Login;
