@@ -31,26 +31,26 @@ const CustomCalendar = (props: Props) => {
   }, [currentMonth]);
   return (
     <div className="flex flex-col">
-      <div className="gap-x flex flex-row self-center">
+      <div className="flex w-fit flex-row justify-between gap-x-2 self-center">
         {currentMonth > 0 && (
           <FaChevronLeft
             onClick={() => setcurrentMonth(currentMonth - 1)}
-            className="cursor-pointer self-center"
-            size={12}
+            className="cursor-pointer self-center text-neutral-200"
+            size={16}
           />
         )}
-        <h1 className="w-24 select-none border-b-2 border-blue-300 text-center text-lg font-semibold text-neutral-200">
+        <h1 className="w-fit select-none border-b-2 border-blue-300 text-center text-[1.5rem] font-semibold text-neutral-200">
           {month[currentMonth]}
         </h1>
         {currentMonth < 11 && (
           <FaChevronRight
             onClick={() => setcurrentMonth(currentMonth + 1)}
-            className="cursor-pointer  self-center"
-            size={12}
+            className="cursor-pointer  self-center text-neutral-200"
+            size={16}
           />
         )}
       </div>
-      <div className="grid grid-cols-1 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
+      <div className="mt-2 grid grid-cols-1 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
         {days.map((element, key) => {
           return (
             <DayComponent
