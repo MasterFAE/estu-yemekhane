@@ -1,8 +1,10 @@
 import { Dine, Food } from "@prisma/client";
 import React from "react";
 import { FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import daysInMonth from "../../lib/daysInMonth";
 import getDayName from "../../lib/getDayName";
+import { addItem, getCartItems } from "../../redux/cart/cartSlice";
 
 type Props = {
   day: any;
@@ -13,6 +15,17 @@ type Props = {
 // style={{ backgroundColor: "#F7EEDC", color: "#0B0B0B" }}>
 const DayComponent = (props: Props) => {
   const { dine, day } = props;
+  const dispatch = useDispatch();
+  const addCart = async (e) => {
+    const result = await fetch(`api/cart/${props.dine?.id}`, {
+      method: "POST",
+    });
+    let data = await result.json();
+    if (result.ok && !data.error) {
+      dispatch(getCartItems());
+    }
+  };
+
   return (
     <div className="group min-h-[16rem] w-full select-none rounded-lg bg-neutral-800  ">
       {day != 0 ? (
@@ -31,7 +44,11 @@ const DayComponent = (props: Props) => {
               </ul>
               <div className="flex h-full w-full flex-row items-center justify-between gap-x-2 border-t border-neutral-900 bg-neutral-800 px-4 py-2">
                 <div className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 group-hover:flex  ">
-                  <FaPlus className="text-green-900" size={16} />
+                  <FaPlus
+                    className="text-green-900"
+                    onClick={addCart}
+                    size={16}
+                  />
                 </div>
                 <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600 group-hover:flex">
                   <FaSearch className=" text-blue-900" size={16} />

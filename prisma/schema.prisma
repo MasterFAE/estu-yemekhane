@@ -98,6 +98,7 @@ model Dine {
   reservations ReservedDine[]
   type         DINEHOURS
   cart         Cart[]
+  cost         Int            @default(5)
   date         DateTime       @default(now())
 }
 

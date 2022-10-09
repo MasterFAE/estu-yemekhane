@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Dine" ADD COLUMN     "cost" INTEGER NOT NULL DEFAULT 5;

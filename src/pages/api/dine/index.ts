@@ -12,6 +12,7 @@ export default async function userHandler(
   switch (req.method) {
     case "GET":
       const dines = await prisma.dine.findMany({ include: { foods: true } });
+      console.log({ dines });
       res.status(200).json(dines);
       break;
 
