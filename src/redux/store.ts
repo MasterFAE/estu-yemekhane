@@ -9,10 +9,12 @@ import { createWrapper, HYDRATE, MakeStore } from "next-redux-wrapper";
 
 import userReducer from "./user/userSlice";
 import cartReducer from "./cart/cartSlice";
+import systemMessageReducer from "./system-message/systemMessageSlice";
 
 const combinedReducers = combineReducers({
   user: userReducer,
   cart: cartReducer,
+  systemMessage: systemMessageReducer,
 });
 export type OurStore = ReturnType<typeof combinedReducers>;
 

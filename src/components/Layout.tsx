@@ -2,8 +2,15 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Router from "next/router";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import addSystemMessage from "../lib/addSystemMessage";
+import { storeType } from "../redux/store";
+import {
+  addMessage,
+  SystemMessageType,
+} from "../redux/system-message/systemMessageSlice";
 import { getCurrentUser } from "../redux/user/userSlice";
+import SystemMessage from "./SystemMessage";
 
 type Props = {
   children: any;
@@ -12,6 +19,8 @@ type Props = {
 const Layout = (props: Props) => {
   const session = useSession();
   const dispatch = useDispatch();
+  const systemMessage = useSelector((state: storeType) => state.systemMessage);
+
   useEffect(() => {
     if (session.status != "loading") {
       dispatch(getCurrentUser(session.data?.user.username));
@@ -27,7 +36,14 @@ const Layout = (props: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="bg-neutral-900">
-        <div className="m-auto flex w-full bg-neutral-800 lg:w-3/4">
+        {/* ERROR LIST HANDLER */}
+        <div className="z-70 fixed top-5 right-0 m-auto flex max-h-screen flex-col gap-y-2 sm:right-5">
+          {systemMessage.map((e) => {
+            return <SystemMessage item={e} />;
+          })}
+        </div>
+
+        <div className="m-auto flex w-full gap-x-2 bg-neutral-800 lg:w-3/4">
           <main className="w-full p-4">{props.children}</main>
         </div>
       </div>

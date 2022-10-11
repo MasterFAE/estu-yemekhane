@@ -2,9 +2,11 @@ import { Dine, Food } from "@prisma/client";
 import React from "react";
 import { FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import addSystemMessage from "../../lib/addSystemMessage";
 import daysInMonth from "../../lib/daysInMonth";
 import getDayName from "../../lib/getDayName";
 import { addItem, getCartItems } from "../../redux/cart/cartSlice";
+import { SystemMessageType } from "../../redux/system-message/systemMessageSlice";
 
 type Props = {
   day: any;
@@ -21,6 +23,14 @@ const DayComponent = (props: Props) => {
       method: "POST",
     });
     let data = await result.json();
+    if (!result.ok) {
+      addSystemMessage(dispatch, {
+        type: SystemMessageType.ERROR,
+        message: data.error,
+        title: "Error has occurred",
+      });
+      return;
+    }
     if (result.ok && !data.error) {
       dispatch(getCartItems());
     }
@@ -43,14 +53,12 @@ const DayComponent = (props: Props) => {
                 })}
               </ul>
               <div className="flex h-full w-full flex-row items-center justify-between gap-x-2 border-t border-neutral-900 bg-neutral-800 px-4 py-2">
-                <div className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 group-hover:flex  ">
-                  <FaPlus
-                    className="text-green-900"
-                    onClick={addCart}
-                    size={16}
-                  />
+                <div
+                  onClick={addCart}
+                  className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
+                  <FaPlus className="text-green-900" size={16} />
                 </div>
-                <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600 group-hover:flex">
+                <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600">
                   <FaSearch className=" text-blue-900" size={16} />
                 </div>
               </div>

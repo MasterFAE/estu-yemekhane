@@ -1,12 +1,15 @@
 import { Dine, Food } from "@prisma/client";
+import result from "postcss/lib/result";
 import React from "react";
 import { FaCross, FaHamburger, FaMarker, FaTrash } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import addSystemMessage from "../lib/addSystemMessage";
 import dineTypeToString from "../lib/dineTypeToString";
 import getDayName from "../lib/getDayName";
 import { deleteItem, Dine_W_Food } from "../redux/cart/cartSlice";
 import { storeType } from "../redux/store";
+import { SystemMessageType } from "../redux/system-message/systemMessageSlice";
 import ModalWrapper from "./ModalWrapper";
 
 type Props = {
@@ -22,9 +25,15 @@ const CartModal = (props: Props) => {
   const cart = useSelector((state: storeType) => state.cart);
   const dispatch = useDispatch();
   const deleteFromCart = async (id: number) => {
-    //TODO: DELETE REQUEST
     const response = await fetch(`api/cart/${id}`, { method: "DELETE" });
-    console.log(response.ok);
+    if (!response.ok) {
+      addSystemMessage(dispatch, {
+        type: SystemMessageType.ERROR,
+        message: "Error",
+        title: "Error has occurred while deleting item.",
+      });
+      return;
+    }
     if (response.ok) dispatch(deleteItem({ id }));
   };
 
