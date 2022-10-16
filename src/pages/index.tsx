@@ -1,50 +1,37 @@
-import type { NextPage, NextPageContext } from "next";
+import type { NextPage } from "next";
 import Layout from "../components/Layout";
 import { useEffect, useState } from "react";
 import CustomCalendar from "../components/Calendar/CustomCalendar";
-import { getSession, signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { storeType } from "../redux/store";
 import Router from "next/router";
-import {
-  FaCalendar,
-  FaClock,
-  FaHamburger,
-  FaPowerOff,
-  FaShoppingBasket,
-  FaShoppingCart,
-  FaSignOutAlt,
-} from "react-icons/fa";
-import { Dine } from ".prisma/client";
+import { FaHamburger, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import CartModal from "../components/CartModal";
 import { getCartItems } from "../redux/cart/cartSlice";
-import {
-  addMessage,
-  SystemMessageType,
-} from "../redux/system-message/systemMessageSlice";
-import addSystemMessage from "../lib/addSystemMessage";
 
 /*
+
+  ON-GOING:
+  [] Takvimin rezerve edilmiş günleri + butonu olmayacak ve ikon mikonla gösterilcek
 
   TODO:
 
     [] Gün fonksiyonlarını UTC'ye çevir
-    [] Kahvaltı/Öğlen Yemeği/Akşam yemeği inputlarına göre render
     [] System error entegrasyonu
     [] Rezervasyon kartı(Dines)
-    [] Takvimin rezerve edilmiş günleri + butonu olmayacak ve ikon mikonla gösterilcek
-    [] Geçmiş günlerin + butonları kapanacak
-    [] Sadece 2 gün sonraki + butonlar açık olacak
     [] O günkü alım için günlük yemek al seçeneği
+    [] Formik edit
 
 */
 
-const Home: NextPage = (props) => {
+const Home: NextPage = (props: any) => {
+  const { data } = props;
   const [value, onChange] = useState(new Date());
   const [cartModal, openCartModal] = useState(false);
   const cart = useSelector((state: storeType) => state.cart);
   const user = useSelector((state: storeType) => state.user);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   useEffect(() => {
     dispatch(getCartItems());
   }, []);
@@ -108,7 +95,7 @@ const Home: NextPage = (props) => {
       </section>
       {/* Calendar */}
       <section>
-        <CustomCalendar data={props.data} />
+        <CustomCalendar data={data} />
       </section>
     </Layout>
   );

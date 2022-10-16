@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import daysInMonth from "../../lib/daysInMonth";
 import DayComponent from "./DayComponent";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import getDaysArray from "../../lib/getDaysArray";
+import getDaysArray, { DaysItem } from "../../lib/getDaysArray";
+import { DINEHOURS } from ".prisma/client";
 
 type Props = { data: any[] };
 const month = [
@@ -23,7 +24,8 @@ const month = [
 const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
-  const [days, setDays] = useState(
+  const [dineType, selectDineType] = useState(DINEHOURS.BREAKFAST);
+  const [days, setDays] = useState<DaysItem>(
     getDaysArray(props.data, currentMonth, date.getFullYear())
   );
   useEffect(() => {
@@ -33,37 +35,48 @@ const CustomCalendar = (props: Props) => {
     <div className="flex flex-col">
       <div className="flex w-fit flex-row justify-between gap-x-2 self-center">
         {currentMonth > 0 ? (
-          <FaChevronLeft
+          <div
             onClick={() => setcurrentMonth(currentMonth - 1)}
-            className="cursor-pointer self-center text-neutral-200"
-            size={16}
-          />
+            className="flex h-fit cursor-pointer self-center rounded-full bg-neutral-600 p-[0.3rem] text-neutral-200 transition-all hover:bg-neutral-500 focus:bg-neutral-700">
+            <FaChevronLeft size={16} />
+          </div>
         ) : (
-          <FaChevronLeft
-            className="cursor-not-allowed self-center text-neutral-500"
-            size={16}
-          />
+          <div className="flex h-fit cursor-pointer self-center rounded-full bg-neutral-600 p-[0.3rem] text-neutral-200 transition-all hover:bg-neutral-500 focus:bg-neutral-700">
+            <FaChevronLeft size={16} />
+          </div>
         )}
-        <h1 className="w-32 select-none border-b-2 border-blue-300 text-center text-[1.5rem] font-semibold text-neutral-200">
-          {month[currentMonth]}
-        </h1>
+        <div className="flex flex-col">
+          <h1 className="w-32 select-none rounded-sm border-b-2 border-blue-300 text-center text-[1.5rem] font-semibold text-neutral-200">
+            {month[currentMonth]}
+          </h1>
+
+          <select
+            onChange={(e) => selectDineType(e.target.value)}
+            className="mt-2 block w-fit self-center rounded-lg  border border-neutral-600 bg-neutral-700 py-[0.1rem] text-center text-sm text-white placeholder-neutral-400 focus:border-blue-500 focus:ring-blue-500">
+            <option selected value={DINEHOURS.BREAKFAST}>
+              {DINEHOURS.BREAKFAST}
+            </option>
+            <option value={DINEHOURS.LUNCH}>{DINEHOURS.LUNCH}</option>
+            <option value={DINEHOURS.DINNER}>{DINEHOURS.DINNER}</option>
+          </select>
+        </div>
         {currentMonth < 11 ? (
-          <FaChevronRight
+          <div
             onClick={() => setcurrentMonth(currentMonth + 1)}
-            className="cursor-pointer  self-center text-neutral-200"
-            size={16}
-          />
+            className="flex h-fit cursor-pointer self-center rounded-full bg-neutral-600 p-[0.3rem] text-neutral-200 transition-all hover:bg-neutral-500 focus:bg-neutral-700">
+            <FaChevronRight size={16} />
+          </div>
         ) : (
-          <FaChevronRight
-            className="cursor-not-allowed self-center text-neutral-500"
-            size={16}
-          />
+          <div className="flex h-fit cursor-not-allowed self-center rounded-full bg-neutral-600 p-[0.3rem] text-neutral-200 transition-all hover:bg-neutral-500 focus:bg-neutral-700">
+            <FaChevronRight size={16} />
+          </div>
         )}
       </div>
       <div className="mt-2 grid grid-cols-1 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
         {days.map((element, key) => {
           return (
             <DayComponent
+              dineType={dineType}
               day={element.date}
               dine={element.dine}
               key={element.id}

@@ -1,9 +1,16 @@
 import { date } from "zod";
+import { Dine_W_Food } from "../redux/cart/cartSlice";
 import daysInMonth from "./daysInMonth";
 import getDayName from "./getDayName";
 
-const getDaysArray = (data: any[], month: number, year: number) => {
-  let days: any[] = daysInMonth(month, year);
+export type DaysItem = {
+  date: Date;
+  id: string;
+  dine: Dine_W_Food[];
+};
+
+const getDaysArray: DaysItem[] = (data: any[], month: number, year: number) => {
+  let days: DaysItem[] = daysInMonth(month, year);
   let startDay = _days.findIndex((e) => e == getDayName(days[0].date));
   let endDay =
     4 - _days.findIndex((e) => e == getDayName(days[days.length - 1].date));
@@ -19,18 +26,23 @@ const getDaysArray = (data: any[], month: number, year: number) => {
     days.unshift({
       id: date.toLocaleDateString("en-CA"),
       date: new Date(date),
+      dine: [],
     });
   }
   for (let i = 0; i < endDay; i++) {
     let date = new Date(afterDays[i].date);
-    days.push({ id: date.toLocaleDateString("en-CA"), date: new Date(date) });
+    days.push({
+      id: date.toLocaleDateString("en-CA"),
+      date: new Date(date),
+      dine: [],
+    });
   }
   if (data) {
     data.forEach((element) => {
       let _id = element.date.split("T")[0];
       let index = days.findIndex((x) => x.id === _id);
       if (index == -1) return;
-      days[index].dine = element;
+      days[index]?.dine.push(element);
     });
   }
 

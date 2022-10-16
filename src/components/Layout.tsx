@@ -18,12 +18,12 @@ type Props = {
 
 const Layout = (props: Props) => {
   const session = useSession();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const systemMessage = useSelector((state: storeType) => state.systemMessage);
 
   useEffect(() => {
     if (session.status != "loading") {
-      dispatch(getCurrentUser(session.data?.user.username));
+      dispatch(getCurrentUser(session?.data?.user?.username));
     }
     if (session.status == "unauthenticated") Router.replace("/login");
   }, [session]);

@@ -1,4 +1,4 @@
-function getDayName(dateStr: string) {
+function getDayName(dateStr: string | Date) {
   var date = new Date(dateStr);
   return date.toLocaleDateString("en-EN", { weekday: "long" });
 }
