@@ -1,12 +1,18 @@
 import { Dine, DINEHOURS, Food } from "@prisma/client";
 import React, { useEffect, useState } from "react";
-import { FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { FaCross, FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
+import { MdClose, MdDone } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../../lib/addSystemMessage";
 import daysInMonth from "../../lib/daysInMonth";
 import getDayName from "../../lib/getDayName";
 import isInThePast from "../../lib/isInThePast";
-import { Dine_W_Food, getCartItems } from "../../redux/cart/cartSlice";
+import {
+  deleteItem,
+  Dine_W_Food,
+  getCartItems,
+} from "../../redux/cart/cartSlice";
+import { storeType } from "../../redux/store";
 import { SystemMessageType } from "../../redux/system-message/systemMessageSlice";
 
 type Props = {
@@ -21,12 +27,38 @@ const DayComponent = (props: Props) => {
   const [renderDine, setrenderDine] = useState<Dine_W_Food | null | undefined>(
     null
   );
+  const [owned, setOwned] = useState(false);
+  const [inCart, setInCart] = useState(false);
+  const cart = useSelector((state: storeType) => state.cart);
+  const reservation = useSelector((state: storeType) => state.user.reservation);
 
-  console.log({ day, is: isInThePast(day) });
+  const deleteFromCart = async (id: number) => {
+    const response = await fetch(`api/cart/${id}`, { method: "DELETE" });
+    if (!response.ok) {
+      addSystemMessage(dispatch, {
+        type: SystemMessageType.ERROR,
+        message: "Error",
+        title: "Error has occurred while deleting item.",
+      });
+      return;
+    }
+    if (response.ok) dispatch(deleteItem({ id }));
+  };
+
+  useEffect(() => {
+    if (dine.length === 0) return;
+    setInCart(cart.dine.filter((e) => e.id === dine[0].id).length > 0);
+  }, [cart]);
+
+  useEffect(() => {
+    if (dine.length === 0) return;
+    setOwned(reservation.filter((e) => e.dineId === dine[0].id).length > 0);
+  }, [reservation]);
 
   useEffect(() => {
     if (dine && dine.find((e) => e.type === dineType)) {
       setrenderDine(dine.find((e) => e.type === dineType));
+      setOwned(reservation.filter((e) => e.dineId === dine[0].id).length > 0);
       return;
     }
     setrenderDine(null);
@@ -66,16 +98,37 @@ const DayComponent = (props: Props) => {
             <>
               <ul className="h-full list-none">
                 {renderDine.foods.map((food) => {
-                  return <li className="food-label">{food.label}</li>;
+                  return (
+                    <li className="food-label" key={food.label}>
+                      {food.label}
+                    </li>
+                  );
                 })}
               </ul>
               {!isInThePast(day) ? (
                 <div className="flex h-full w-full flex-row items-center justify-between gap-x-2 border-t border-neutral-900 bg-neutral-800 px-4 py-2">
-                  <div
-                    onClick={addCart}
-                    className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
-                    <FaPlus className="text-green-900" size={16} />
-                  </div>
+                  {owned ? (
+                    <div className="block w-fit cursor-not-allowed rounded-lg bg-yellow-500 px-4 py-2 ">
+                      <MdDone size={16} className="text-yellow-100" />
+                    </div>
+                  ) : (
+                    <div className="transition-all">
+                      {inCart ? (
+                        <div
+                          onClick={() => deleteFromCart(dine[0].id)}
+                          className="cursor-pointer items-center justify-center rounded-lg border border-red-700 bg-neutral-800 px-4 py-2 text-red-700 transition-all hover:border-red-800 hover:bg-red-800 hover:text-red-400 focus:ring-2 focus:ring-neutral-300">
+                          <MdClose size={16} />
+                        </div>
+                      ) : (
+                        <div
+                          onClick={addCart}
+                          className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
+                          <FaPlus className="text-green-900" />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600">
                     <FaSearch className=" text-blue-900" size={16} />
                   </div>

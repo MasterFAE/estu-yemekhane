@@ -28,6 +28,7 @@ export default async function userHandler(
           civId: true,
           image: true,
           department: true,
+          reservation: { include: { Dine: { include: { foods: true } } } },
         },
       });
       if (!user) {

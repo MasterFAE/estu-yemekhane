@@ -9,19 +9,23 @@ import Router from "next/router";
 import { FaHamburger, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import CartModal from "../components/CartModal";
 import { getCartItems } from "../redux/cart/cartSlice";
+import ReservationModal from "../components/ReservationModal";
 
 /*
 
   ON-GOING:
-  [] Takvimin rezerve edilmiş günleri + butonu olmayacak ve ikon mikonla gösterilcek
+  
+  TEST:
+    [] Log out throws error
+    [] Rezervasyon kartı(Dines)
+    [] Takvimin rezerve edilmiş günleri + butonu olmayacak ve ikon mikonla gösterilcek
 
   TODO:
 
+    [] Günlük yemek inceleme, blue button
+    [] Formik edit
     [] Gün fonksiyonlarını UTC'ye çevir
     [] System error entegrasyonu
-    [] Rezervasyon kartı(Dines)
-    [] O günkü alım için günlük yemek al seçeneği
-    [] Formik edit
 
 */
 
@@ -29,6 +33,7 @@ const Home: NextPage = (props: any) => {
   const { data } = props;
   const [value, onChange] = useState(new Date());
   const [cartModal, openCartModal] = useState(false);
+  const [reservationModal, openreservationModal] = useState(false);
   const cart = useSelector((state: storeType) => state.cart);
   const user = useSelector((state: storeType) => state.user);
   const dispatch = useDispatch<any>();
@@ -36,9 +41,9 @@ const Home: NextPage = (props: any) => {
     dispatch(getCartItems());
   }, []);
 
-  const handleLogOut = () => {
-    Router.push("/login");
+  const handleLogOut = async () => {
     signOut();
+    // Router.push("/login");
     return;
   };
   return (
@@ -46,6 +51,9 @@ const Home: NextPage = (props: any) => {
       {/* User component */}
       <section className="flex flex-row gap-x-4 bg-neutral-900 p-2">
         {cartModal && <CartModal openModal={openCartModal} />}
+        {reservationModal && (
+          <ReservationModal openModal={openreservationModal} />
+        )}
         <div className="h-16 w-16 rounded-full bg-neutral-600"></div>
         <div className="flex w-full flex-row justify-between gap-1 text-neutral-200">
           <div className="flex flex-col gap-y-1">
@@ -55,15 +63,17 @@ const Home: NextPage = (props: any) => {
           </div>
 
           <div className="flex h-full w-fit flex-col gap-2 lg:m-2 lg:flex-row lg:gap-x-4 ">
-            <button className="flex h-8 w-full  cursor-pointer flex-row items-center justify-between border-b-2  border-yellow-600 px-1 transition-all hover:bg-neutral-700 lg:min-w-[4rem] lg:px-3">
+            <button
+              onClick={() => openreservationModal(true)}
+              className="flex h-8 w-full  cursor-pointer flex-row items-center justify-between border-b-2  border-yellow-600 px-1 transition-all hover:bg-neutral-700 lg:min-w-[4rem] lg:px-3">
               <div className="flex flex-row items-center gap-x-[0.35rem]">
                 <FaHamburger size={14} className="mb-[2px] text-neutral-400" />
                 <h1 className="hidden text-end text-sm font-semibold text-neutral-400 lg:block">
-                  Dine
+                  Reserved
                 </h1>
               </div>
               <h4 className="rounded-full p-[0.15rem] px-1  text-center text-sm font-semibold text-neutral-200 lg:ml-2">
-                6
+                {user.reservation.length}
               </h4>
             </button>
 

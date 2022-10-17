@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 import daysInMonth from "../../lib/daysInMonth";
 import DayComponent from "./DayComponent";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import getDaysArray, { DaysItem } from "../../lib/getDaysArray";
 import { DINEHOURS } from ".prisma/client";
+import { useDispatch, useSelector } from "react-redux";
+import { storeType } from "../../redux/store";
+import { getReservation } from "../../redux/user/userSlice";
 
 type Props = { data: any[] };
 const month = [
@@ -25,9 +28,16 @@ const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
   const [dineType, selectDineType] = useState(DINEHOURS.BREAKFAST);
+  const dispatch: any = useDispatch();
+
+  useEffect(() => {
+    dispatch(getReservation());
+  }, []);
+
   const [days, setDays] = useState<DaysItem>(
     getDaysArray(props.data, currentMonth, date.getFullYear())
   );
+
   useEffect(() => {
     setDays(getDaysArray(props.data, currentMonth, date.getFullYear()));
   }, [currentMonth]);
@@ -51,11 +61,10 @@ const CustomCalendar = (props: Props) => {
           </h1>
 
           <select
+            defaultValue={DINEHOURS.BREAKFAST}
             onChange={(e) => selectDineType(e.target.value)}
             className="mt-2 block w-fit self-center rounded-lg  border border-neutral-600 bg-neutral-700 py-[0.1rem] text-center text-sm text-white placeholder-neutral-400 focus:border-blue-500 focus:ring-blue-500">
-            <option selected value={DINEHOURS.BREAKFAST}>
-              {DINEHOURS.BREAKFAST}
-            </option>
+            <option value={DINEHOURS.BREAKFAST}>{DINEHOURS.BREAKFAST}</option>
             <option value={DINEHOURS.LUNCH}>{DINEHOURS.LUNCH}</option>
             <option value={DINEHOURS.DINNER}>{DINEHOURS.DINNER}</option>
           </select>
@@ -79,8 +88,9 @@ const CustomCalendar = (props: Props) => {
               dineType={dineType}
               day={element.date}
               dine={element.dine}
-              key={element.id}
-              dayNo={key + 1}></DayComponent>
+              key={useId()}
+              dayNo={key + 1}
+            />
           );
         })}
       </div>

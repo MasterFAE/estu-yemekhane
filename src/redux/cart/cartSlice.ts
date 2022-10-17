@@ -48,6 +48,7 @@ const cartSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(getCartItems.fulfilled, (state, action) => {
       state.dine = action.payload.dine;
+      state.total = 0;
       state.dine.forEach((element) => {
         state.total += element.cost;
       });
