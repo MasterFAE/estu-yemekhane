@@ -1,4 +1,4 @@
-import { Dine, DINEHOURS, Food } from "@prisma/client";
+import { Dine, DINEHOURS, Food, ReservedDine } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { FaCross, FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
 import { MdClose, MdDone } from "react-icons/md";
@@ -19,7 +19,7 @@ type Props = {
   day: any;
   dine: Dine_W_Food[];
   dayNo: number;
-  dineType: DINEHOURS;
+  dineType: typeof DINEHOURS | string;
 };
 // style={{ backgroundColor: "#F7EEDC", color: "#0B0B0B" }}>
 const DayComponent = (props: Props) => {
@@ -30,9 +30,12 @@ const DayComponent = (props: Props) => {
   const [owned, setOwned] = useState(false);
   const [inCart, setInCart] = useState(false);
   const cart = useSelector((state: storeType) => state.cart);
-  const reservation = useSelector((state: storeType) => state.user.reservation);
+  const reservation: ReservedDine[] = useSelector(
+    (state: storeType) => state.user.reservation
+  );
 
-  const deleteFromCart = async (id: number) => {
+  const deleteFromCart = async (id?: number) => {
+    if (!id) return;
     const response = await fetch(`api/cart/${id}`, { method: "DELETE" });
     if (!response.ok) {
       addSystemMessage(dispatch, {
@@ -47,18 +50,18 @@ const DayComponent = (props: Props) => {
 
   useEffect(() => {
     if (dine.length === 0) return;
-    setInCart(cart.dine.filter((e) => e.id === dine[0].id).length > 0);
+    setInCart(cart.dine.filter((e) => e.id === dine[0]?.id).length > 0);
   }, [cart]);
 
   useEffect(() => {
     if (dine.length === 0) return;
-    setOwned(reservation.filter((e) => e.dineId === dine[0].id).length > 0);
+    setOwned(reservation.filter((e) => e.dineId === dine[0]?.id).length > 0);
   }, [reservation]);
 
   useEffect(() => {
     if (dine && dine.find((e) => e.type === dineType)) {
       setrenderDine(dine.find((e) => e.type === dineType));
-      setOwned(reservation.filter((e) => e.dineId === dine[0].id).length > 0);
+      setOwned(reservation.filter((e) => e.dineId === dine[0]?.id).length > 0);
       return;
     }
     setrenderDine(null);
@@ -115,7 +118,7 @@ const DayComponent = (props: Props) => {
                     <div className="transition-all">
                       {inCart ? (
                         <div
-                          onClick={() => deleteFromCart(dine[0].id)}
+                          onClick={() => deleteFromCart(dine[0]?.id)}
                           className="cursor-pointer items-center justify-center rounded-lg border border-red-700 bg-neutral-800 px-4 py-2 text-red-700 transition-all hover:border-red-800 hover:bg-red-800 hover:text-red-400 focus:ring-2 focus:ring-neutral-300">
                           <MdClose size={16} />
                         </div>

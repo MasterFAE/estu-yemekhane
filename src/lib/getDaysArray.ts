@@ -9,7 +9,7 @@ export type DaysItem = {
   dine: Dine_W_Food[];
 };
 
-const getDaysArray: DaysItem[] = (data: any[], month: number, year: number) => {
+const getDaysArray = (data: any[], month: number, year: number) => {
   let days: DaysItem[] = daysInMonth(month, year);
   let startDay = _days.findIndex((e) => e == getDayName(days[0].date));
   let endDay =

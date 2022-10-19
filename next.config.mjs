@@ -9,17 +9,18 @@ import withTM from "next-transpile-modules";
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
-  return withTM([
-    "@fullcalendar/common",
-    "@fullcalendar/daygrid",
-    "@fullcalendar/react",
-    "@fullcalendar/interaction",
-  ])({ ...config });
+  return withTM([])({ ...config });
 }
 
 export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
   i18n: {
     locales: ["en"],

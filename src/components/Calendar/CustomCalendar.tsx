@@ -27,7 +27,7 @@ const month = [
 const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
-  const [dineType, selectDineType] = useState(DINEHOURS.BREAKFAST);
+  const [dineType, selectDineType] = useState("");
   const dispatch: any = useDispatch();
 
   useEffect(() => {
