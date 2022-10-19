@@ -25,7 +25,7 @@ const CartModal = (props: Props) => {
   const cart = useSelector((state: storeType) => state.cart);
   const dispatch = useDispatch();
   const deleteFromCart = async (id: number) => {
-    const response = await fetch(`api/cart/${id}`, { method: "DELETE" });
+    const response = await fetch(`/api/cart/${id}`, { method: "DELETE" });
     if (!response.ok) {
       addSystemMessage(dispatch, {
         type: SystemMessageType.ERROR,

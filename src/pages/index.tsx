@@ -10,6 +10,8 @@ import { FaHamburger, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import CartModal from "../components/CartModal";
 import { getCartItems } from "../redux/cart/cartSlice";
 import ReservationModal from "../components/ReservationModal";
+import useSWR from "swr";
+import fetcher from "../lib/fetcher";
 
 /*
 
@@ -30,7 +32,7 @@ import ReservationModal from "../components/ReservationModal";
 */
 
 const Home: NextPage = (props: any) => {
-  const { data } = props;
+  const { data, error } = useSWR("/api/dine", fetcher);
   const [value, onChange] = useState(new Date());
   const [cartModal, openCartModal] = useState(false);
   const [reservationModal, openreservationModal] = useState(false);
@@ -46,6 +48,19 @@ const Home: NextPage = (props: any) => {
     // Router.push("/login");
     return;
   };
+
+  if (error)
+    return (
+      <Layout>
+        <div className="h-screen text-neutral-200">Failed to load</div>
+      </Layout>
+    );
+  if (!data)
+    return (
+      <Layout>
+        <div className="h-screen text-neutral-200">Failed to load</div>
+      </Layout>
+    );
   return (
     <Layout>
       {/* User component */}
@@ -111,14 +126,14 @@ const Home: NextPage = (props: any) => {
   );
 };
 
-export async function getStaticProps() {
-  const request = await fetch("http://localhost:3000/api/dine", {
-    method: "GET",
-  });
-  const data = await request.json();
-  return {
-    props: { data }, // will be passed to the page component as props
-  };
-}
+// export async function getStaticProps() {
+//   const request = await fetch("/api/dine", {
+//     method: "GET",
+//   });
+//   const data = await request.json();
+//   return {
+//     props: { data }, // will be passed to the page component as props
+//   };
+// }
 
 export default Home;

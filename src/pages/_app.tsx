@@ -19,4 +19,4 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;

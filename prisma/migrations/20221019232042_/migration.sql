@@ -35,10 +35,12 @@ CREATE TABLE "Session" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "emailVerified" TIMESTAMP(3),
+    "civId" TEXT NOT NULL DEFAULT '',
+    "department" TEXT NOT NULL DEFAULT '',
     "image" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -76,7 +78,9 @@ CREATE TABLE "Cart" (
 -- CreateTable
 CREATE TABLE "Dine" (
     "id" SERIAL NOT NULL,
-    "date" "DINEHOURS" NOT NULL,
+    "type" "DINEHOURS" NOT NULL,
+    "cost" INTEGER NOT NULL DEFAULT 5,
+    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Dine_pkey" PRIMARY KEY ("id")
 );
@@ -107,6 +111,9 @@ CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provi
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_name_key" ON "User"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
