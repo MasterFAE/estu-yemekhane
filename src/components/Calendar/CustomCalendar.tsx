@@ -34,7 +34,7 @@ const CustomCalendar = (props: Props) => {
     dispatch(getReservation());
   }, []);
 
-  const [days, setDays] = useState<DaysItem>(
+  const [days, setDays] = useState(
     getDaysArray(props.data, currentMonth, date.getFullYear())
   );
 
