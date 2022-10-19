@@ -79,7 +79,7 @@ const Home: NextPage = (props: any) => {
 
             <button
               onClick={() => openCartModal(true)}
-              className="flex h-8 w-full cursor-pointer flex-row items-center justify-between gap-x-1 border-b-2  border-green-600 px-1 transition-all hover:bg-neutral-700 lg:min-w-[4rem] lg:px-3  ">
+              className="flex h-8 w-full cursor-pointer flex-row items-center justify-between gap-x-1 border-b-2  border-green-600 px-1 transition-all hover:bg-neutral-700 lg:min-w-[4rem] lg:px-3">
               <div className="flex flex-row items-center gap-x-[0.35rem]">
                 <FaShoppingCart
                   size={14}
