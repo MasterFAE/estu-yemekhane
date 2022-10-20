@@ -45,11 +45,9 @@ const Layout = (props: Props) => {
             })}
           </div>
 
-          <Suspense fallback={<Loading />}>
             <div className="m-auto flex w-full gap-x-2 bg-neutral-800 lg:w-3/4">
               <main className="w-full p-4">{props.children}</main>
             </div>
-          </Suspense>
         </div>
       </div>
     );
