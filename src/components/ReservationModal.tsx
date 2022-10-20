@@ -15,7 +15,6 @@ type Props = {
 
 const ReservationModal = (props: Props) => {
   const reservation = useSelector((state: storeType) => state.user.reservation);
-  console.log({ reservation });
   return (
     <ModalWrapper>
       <div className="m-auto h-full w-full overflow-y-auto rounded-lg border border-neutral-900 bg-neutral-500 shadow-sm lg:mt-[5%] lg:h-3/4 lg:w-1/2">

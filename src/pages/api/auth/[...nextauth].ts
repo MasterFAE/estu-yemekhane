@@ -51,7 +51,6 @@ export const authOptions: NextAuthOptions = {
           username: string;
           password: string;
         };
-        console.log(await argon2.hash("123"));
         const user = await prisma.user.findFirst({ where: { name: username } });
         if (!user) return null;
         const result = await argon2.verify(user.password, password);
