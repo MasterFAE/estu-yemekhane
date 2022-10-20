@@ -1,6 +1,6 @@
 import { Dine, Food } from "@prisma/client";
 import result from "postcss/lib/result";
-import React from "react";
+import React, { useState } from "react";
 import { FaCross, FaHamburger, FaMarker, FaTrash } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import getDayName from "../lib/getDayName";
 import { deleteItem, Dine_W_Food } from "../redux/cart/cartSlice";
 import { storeType } from "../redux/store";
 import { SystemMessageType } from "../redux/system-message/systemMessageSlice";
+import { getReservation } from "../redux/user/userSlice";
 import ModalWrapper from "./ModalWrapper";
 
 type Props = {
@@ -23,7 +24,41 @@ type Props = {
 
 const CartModal = (props: Props) => {
   const cart = useSelector((state: storeType) => state.cart);
-  const dispatch = useDispatch();
+  const [purchasing, setPurchasing] = useState(false);
+
+  const dispatch = useDispatch<any>();
+
+  const purchase = async () => {
+    setPurchasing(true);
+    const response = await fetch(`/api/cart`, {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cart),
+    });
+    if (!response.ok) {
+      addSystemMessage(dispatch, {
+        type: SystemMessageType.ERROR,
+        message: "Error",
+        title: "Error has occurred while purchasing.",
+      });
+      setPurchasing(false);
+      return;
+    }
+
+    cart.dine.forEach((e) => {
+      dispatch(deleteItem({ id: e.id }));
+    });
+    addSystemMessage(dispatch, {
+      type: SystemMessageType.SUCCESS,
+      title: "Purchased.",
+      message: "Successful",
+    });
+    dispatch(getReservation());
+    setPurchasing(false);
+  };
+
   const deleteFromCart = async (id: number) => {
     const response = await fetch(`/api/cart/${id}`, { method: "DELETE" });
     if (!response.ok) {
@@ -34,7 +69,7 @@ const CartModal = (props: Props) => {
       });
       return;
     }
-    if (response.ok) dispatch(deleteItem({ id }));
+    dispatch(deleteItem({ id }));
   };
 
   return (
@@ -94,8 +129,10 @@ const CartModal = (props: Props) => {
               <div className="flex w-full items-center justify-center border-t-neutral-600 p-4">
                 <button
                   type="button"
+                  disabled={purchasing}
+                  onClick={purchase}
                   className="w-full rounded-lg bg-green-600  py-2.5 text-base font-medium text-white hover:bg-green-700  focus:outline-none focus:ring-4 focus:ring-green-800">
-                  Pay {cart.total}₺
+                  {!purchasing ? `Pay ${cart.total}₺` : "Processing..."}
                 </button>
               </div>
             ) : (

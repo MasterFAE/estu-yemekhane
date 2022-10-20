@@ -14,6 +14,6 @@ const addSystemMessage = async (
   dispatch(addMessage(payload));
   setTimeout(() => {
     dispatch(deleteLastMessage());
-  }, 5000);
+  }, 2000);
 };
 export default addSystemMessage;

@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Router from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useId } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../lib/addSystemMessage";
 import { storeType } from "../redux/store";
@@ -27,7 +27,8 @@ const Layout = (props: Props) => {
     if (session.status == "unauthenticated") Router.push("/login");
   }, [session]);
 
-  if (session.status == "loading") return <h1>Loading</h1>;
+  if (session.status == "loading")
+    return <div className="h-screen w-full"></div>;
   if (session.status == "authenticated" && session.data) {
     return (
       <div>
@@ -39,7 +40,7 @@ const Layout = (props: Props) => {
           {/* ERROR LIST HANDLER */}
           <div className="z-70 fixed top-5 right-0 m-auto flex max-h-screen flex-col gap-y-2 sm:right-5">
             {systemMessage.map((e) => {
-              return <SystemMessage item={e} />;
+              return <SystemMessage item={e} key={null} />;
             })}
           </div>
 

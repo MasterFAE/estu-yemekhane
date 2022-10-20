@@ -27,7 +27,7 @@ const month = [
 const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
-  const [dineType, selectDineType] = useState("");
+  const [dineType, selectDineType] = useState(DINEHOURS.BREAKFAST);
   const dispatch: any = useDispatch();
 
   useEffect(() => {
@@ -81,14 +81,14 @@ const CustomCalendar = (props: Props) => {
           </div>
         )}
       </div>
-      <div className="mt-2 grid grid-cols-1 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
+      <div className="mt-2 grid grid-cols-2 gap-2 rounded-lg bg-neutral-900 p-2 md:grid-cols-5">
         {days.map((element, key) => {
           return (
             <DayComponent
               dineType={dineType}
               day={element.date}
               dine={element.dine}
-              key={useId()}
+              key={key.toString()}
               dayNo={key + 1}
             />
           );

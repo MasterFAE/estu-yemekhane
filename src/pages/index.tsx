@@ -25,9 +25,7 @@ import fetcher from "../lib/fetcher";
   TODO:
 
     [] Günlük yemek inceleme, blue button
-    [] Formik edit
     [] Gün fonksiyonlarını UTC'ye çevir
-    [] System error entegrasyonu
 
 */
 
@@ -40,7 +38,9 @@ const Home: NextPage = (props: any) => {
   const user = useSelector((state: storeType) => state.user);
   const dispatch = useDispatch<any>();
   useEffect(() => {
-    dispatch(getCartItems());
+    if (user.loggedIn) {
+      dispatch(getCartItems());
+    }
   }, []);
 
   const handleLogOut = async () => {
@@ -52,13 +52,13 @@ const Home: NextPage = (props: any) => {
   if (error)
     return (
       <Layout>
-        <div className="h-screen text-neutral-200">Failed to load</div>
+        <div className="h-screen w-full"></div>
       </Layout>
     );
   if (!data)
     return (
       <Layout>
-        <div className="h-screen text-neutral-200">Failed to load</div>
+        <div className="h-screen w-full"></div>
       </Layout>
     );
   return (
@@ -69,7 +69,7 @@ const Home: NextPage = (props: any) => {
         {reservationModal && (
           <ReservationModal openModal={openreservationModal} />
         )}
-        <div className="h-16 w-16 rounded-full bg-neutral-600"></div>
+        <div className="h-16 min-h-[4rem] w-16 min-w-[4rem] rounded-full bg-neutral-600"></div>
         <div className="flex w-full flex-row justify-between gap-1 text-neutral-200">
           <div className="flex flex-col gap-y-1">
             <h1 className="text-lg font-semibold ">{user.name}</h1>
@@ -77,7 +77,7 @@ const Home: NextPage = (props: any) => {
             <h4 className="text-sm">{user.department}</h4>
           </div>
 
-          <div className="flex h-full w-fit flex-col gap-2 lg:m-2 lg:flex-row lg:gap-x-4 ">
+          <div className="flex h-full w-fit flex-col gap-4 lg:m-2 lg:flex-row lg:gap-x-4 ">
             <button
               onClick={() => openreservationModal(true)}
               className="flex h-8 w-full  cursor-pointer flex-row items-center justify-between border-b-2  border-yellow-600 px-1 transition-all hover:bg-neutral-700 lg:min-w-[4rem] lg:px-3">

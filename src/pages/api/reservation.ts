@@ -7,7 +7,8 @@ import { prisma } from "../../server/db/client";
 const restricted = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
   if (!session) res.status(401).json({});
-  console.log({ session });
+  const start = Date.now();
+
   switch (req.method) {
     case "GET":
       const reservation = await prisma.reservedDine.findMany({

@@ -1,10 +1,9 @@
-import { Dine, DINEHOURS, Food, ReservedDine } from "@prisma/client";
+import { DINEHOURS, ReservedDine } from "@prisma/client";
 import React, { useEffect, useState } from "react";
-import { FaCross, FaPlus, FaSearch, FaShoppingCart } from "react-icons/fa";
+import { FaPlus, FaSearch, FaTicketAlt } from "react-icons/fa";
 import { MdClose, MdDone } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../../lib/addSystemMessage";
-import daysInMonth from "../../lib/daysInMonth";
 import getDayName from "../../lib/getDayName";
 import isInThePast from "../../lib/isInThePast";
 import {
@@ -21,12 +20,14 @@ type Props = {
   dayNo: number;
   dineType: typeof DINEHOURS | string;
 };
-// style={{ backgroundColor: "#F7EEDC", color: "#0B0B0B" }}>
+
 const DayComponent = (props: Props) => {
   const { dineType, dine, day } = props;
-  const [renderDine, setrenderDine] = useState<Dine_W_Food | null | undefined>(
-    null
-  );
+  const [renderDine, setrenderDine] = useState<Dine_W_Food | null>(null);
+  //Sets the loading to the buttons
+  const [loadingaction, setAction] = useState(false);
+  const dispatch = useDispatch();
+
   const [owned, setOwned] = useState(false);
   const [inCart, setInCart] = useState(false);
   const cart = useSelector((state: storeType) => state.cart);
@@ -34,41 +35,56 @@ const DayComponent = (props: Props) => {
     (state: storeType) => state.user.reservation
   );
 
-  const deleteFromCart = async (id?: number) => {
-    if (!id) return;
-    const response = await fetch(`api/cart/${id}`, { method: "DELETE" });
+  useEffect(() => {
+    if (dine.length === 0) return;
+    setInCart(cart.dine.filter((e) => e.id === renderDine?.id).length > 0);
+  }, [cart]);
+
+  useEffect(() => {
+    if (dine.length === 0) return;
+    setOwned(reservation.filter((e) => e.dineId === renderDine?.id).length > 0);
+  }, [reservation]);
+
+  useEffect(() => {
+    if (dine.length === 0) {
+      setrenderDine(null);
+      return;
+    }
+    const selectedDine = dine.find((e) => e.type === dineType);
+    setrenderDine(selectedDine);
+    setInCart(cart.dine.filter((e) => e.id === selectedDine?.id).length > 0);
+    setOwned(
+      reservation.filter((e) => e.dineId === selectedDine?.id).length > 0
+    );
+  }, [dineType]);
+
+  const deleteFromCart = async () => {
+    setAction(true);
+    const response = await fetch(`api/cart/${renderDine?.id}`, {
+      method: "DELETE",
+    });
     if (!response.ok) {
       addSystemMessage(dispatch, {
         type: SystemMessageType.ERROR,
         message: "Error",
         title: "Error has occurred while deleting item.",
       });
+      setAction(false);
+
       return;
     }
-    if (response.ok) dispatch(deleteItem({ id }));
+    addSystemMessage(dispatch, {
+      type: SystemMessageType.INFO,
+      title: "Info",
+      message: "Item has deleted from your cart",
+    });
+    dispatch(deleteItem({ id: renderDine?.id }));
+    setAction(false);
   };
 
-  useEffect(() => {
-    if (dine.length === 0) return;
-    setInCart(cart.dine.filter((e) => e.id === dine[0]?.id).length > 0);
-  }, [cart]);
-
-  useEffect(() => {
-    if (dine.length === 0) return;
-    setOwned(reservation.filter((e) => e.dineId === dine[0]?.id).length > 0);
-  }, [reservation]);
-
-  useEffect(() => {
-    if (dine && dine.find((e) => e.type === dineType)) {
-      setrenderDine(dine.find((e) => e.type === dineType));
-      setOwned(reservation.filter((e) => e.dineId === dine[0]?.id).length > 0);
-      return;
-    }
-    setrenderDine(null);
-  }, [dineType]);
-
-  const dispatch = useDispatch();
   const addCart = async () => {
+    setAction(true);
+
     const result = await fetch(`api/cart/${renderDine?.id}`, {
       method: "POST",
     });
@@ -79,16 +95,22 @@ const DayComponent = (props: Props) => {
         message: data.error,
         title: "Error has occurred",
       });
+      setAction(false);
       return;
     }
-    if (result.ok && !data.error) {
-      //@ts-ignore
-      dispatch(getCartItems());
-    }
+
+    addSystemMessage(dispatch, {
+      type: SystemMessageType.SUCCESS,
+      title: "Added to your cart",
+      message: "You added an item to your cart.",
+    });
+    //@ts-ignore
+    dispatch(getCartItems());
+    setAction(false);
   };
 
   return (
-    <div className="group min-h-[16rem] w-full select-none rounded-lg bg-neutral-800  ">
+    <div className="day-item">
       {day != 0 ? (
         <div className="flex h-full w-full flex-col justify-between truncate transition-all">
           <div className="flex flex-row items-center justify-center gap-x-1 border-b border-neutral-600 bg-neutral-800 p-2">
@@ -111,23 +133,33 @@ const DayComponent = (props: Props) => {
               {!isInThePast(day) ? (
                 <div className="flex h-full w-full flex-row items-center justify-between gap-x-2 border-t border-neutral-900 bg-neutral-800 px-4 py-2">
                   {owned ? (
-                    <div className="block w-fit cursor-not-allowed rounded-lg bg-yellow-500 px-4 py-2 ">
-                      <MdDone size={16} className="text-yellow-100" />
-                    </div>
+                    <button
+                      disabled
+                      className="block w-fit rounded-lg bg-yellow-600 px-4 py-2 ">
+                      <FaTicketAlt size={16} className="text-neutral-900" />
+                    </button>
                   ) : (
                     <div className="transition-all">
                       {inCart ? (
-                        <div
-                          onClick={() => deleteFromCart(dine[0]?.id)}
-                          className="cursor-pointer items-center justify-center rounded-lg border border-red-700 bg-neutral-800 px-4 py-2 text-red-700 transition-all hover:border-red-800 hover:bg-red-800 hover:text-red-400 focus:ring-2 focus:ring-neutral-300">
+                        <button
+                          disabled={loadingaction}
+                          onClick={deleteFromCart}
+                          style={{
+                            cursor: !loadingaction ? "pointer" : "wait",
+                          }}
+                          className="items-center justify-center rounded-lg border border-red-700 bg-neutral-800 px-4 py-2 text-red-700 transition-all hover:border-red-800 hover:bg-red-800 hover:text-red-400 focus:ring-2 focus:ring-neutral-300">
                           <MdClose size={16} />
-                        </div>
+                        </button>
                       ) : (
-                        <div
+                        <button
+                          disabled={loadingaction}
                           onClick={addCart}
-                          className="block w-fit cursor-pointer rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
+                          style={{
+                            cursor: !loadingaction ? "pointer" : "wait",
+                          }}
+                          className="block w-fit  rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
                           <FaPlus className="text-green-900" />
-                        </div>
+                        </button>
                       )}
                     </div>
                   )}

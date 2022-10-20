@@ -4,21 +4,40 @@ import { getServerAuthSession } from "../../../server/common/get-server-auth-ses
 import { prisma } from "../../../server/db/client";
 
 const Cart = async (req: NextApiRequest, res: NextApiResponse) => {
+  const start = Date.now();
   // const examples = await prisma.example.findMany();
   // res.status(200).json(examples);
 
   const session = await getServerAuthSession({ req, res });
   if (!session) res.status(401);
-
+  console.log(req.body);
+  const userId = session?.user?.id;
   switch (req.method) {
     case "GET":
-      let user = await prisma.user.findFirst({
-        where: { id: session?.user?.id },
-        select: {
-          cart: { include: { dine: { include: { foods: true } } } },
+      const cart = await prisma.cart.findUnique({
+        where: { userId },
+        include: { dine: { include: { foods: true } } },
+      });
+      res.status(200).json(cart);
+      break;
+    case "POST":
+      await prisma.cart.update({
+        where: { userId },
+        data: {
+          dine: {
+            disconnect: req.body.dine.map((e) => ({ id: e.id })),
+          },
         },
       });
-      res.status(200).json(user?.cart);
+      await prisma.reservedDine.createMany({
+        data: req.body.dine.map((e) => {
+          return {
+            userId,
+            dineId: e.id,
+          };
+        }),
+      });
+      res.status(200).send("OK");
       break;
   }
 };
