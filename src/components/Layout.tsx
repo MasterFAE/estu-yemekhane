@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Router from "next/router";
-import React, { useEffect, useId } from "react";
+import React, { Suspense, useEffect, useId } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../lib/addSystemMessage";
 import { storeType } from "../redux/store";
@@ -10,6 +10,7 @@ import {
   SystemMessageType,
 } from "../redux/system-message/systemMessageSlice";
 import { getCurrentUser } from "../redux/user/userSlice";
+import Loading from "./Loading";
 import SystemMessage from "./SystemMessage";
 
 type Props = {
@@ -44,9 +45,11 @@ const Layout = (props: Props) => {
             })}
           </div>
 
-          <div className="m-auto flex w-full gap-x-2 bg-neutral-800 lg:w-3/4">
-            <main className="w-full p-4">{props.children}</main>
-          </div>
+          <Suspense fallback={<Loading />}>
+            <div className="m-auto flex w-full gap-x-2 bg-neutral-800 lg:w-3/4">
+              <main className="w-full p-4">{props.children}</main>
+            </div>
+          </Suspense>
         </div>
       </div>
     );

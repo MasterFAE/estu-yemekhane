@@ -12,6 +12,7 @@ import { getCartItems } from "../redux/cart/cartSlice";
 import ReservationModal from "../components/ReservationModal";
 import useSWR from "swr";
 import fetcher from "../lib/fetcher";
+import Loading from "../components/Loading";
 
 /*
 
@@ -49,18 +50,8 @@ const Home: NextPage = (props: any) => {
     return;
   };
 
-  if (error)
-    return (
-      <Layout>
-        <div className="h-screen w-full"></div>
-      </Layout>
-    );
-  if (!data)
-    return (
-      <Layout>
-        <div className="h-screen w-full"></div>
-      </Layout>
-    );
+  if (error) return <Loading />;
+  if (!data) return <Loading />;
   return (
     <Layout>
       {/* User component */}
