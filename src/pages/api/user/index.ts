@@ -8,18 +8,10 @@ export default async function userHandler(
 ) {
   const session = await getServerAuthSession({ req, res });
   if (!session) res.status(401);
-  const {
-    query: { name },
-    method,
-  } = req;
-
+  const { method } = req;
+  const name = session?.user?.name;
   switch (method) {
     case "GET":
-      // Get data from your database
-      if (!name || name == "undefined") {
-        res.status(400).json({ error: "Invalid credentials" });
-        break;
-      }
       const user = await prisma.user.findFirst({
         where: { name },
         select: {

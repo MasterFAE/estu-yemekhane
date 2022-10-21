@@ -31,9 +31,9 @@ export const getReservation = createAsyncThunk(
 // all users should be able to see only their information
 export const getCurrentUser = createAsyncThunk(
   "user/currentUser",
-  async (name: string, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await fetch(`/api/user/${name}`, { method: "GET" });
+      const response = await fetch(`/api/user/`, { method: "GET" });
       if (response.status == 400) {
         Router.replace("/login");
       }

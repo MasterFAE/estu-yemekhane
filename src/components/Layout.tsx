@@ -19,7 +19,7 @@ const Layout = (props: Props) => {
   const systemMessage = useSelector((state: storeType) => state.systemMessage);
   useEffect(() => {
     if (session.status != "loading" && session.data) {
-      dispatch(getCurrentUser(session?.data?.user?.username));
+      dispatch(getCurrentUser());
     }
     if (session.status == "unauthenticated") Router.push("/login");
   }, [session]);
