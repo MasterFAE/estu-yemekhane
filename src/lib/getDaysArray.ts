@@ -14,14 +14,11 @@ const getDaysArray = (data: any[], month: number, year: number) => {
   let startDay = _days.findIndex((e) => e == getDayName(days[0].date));
   let endDay =
     4 - _days.findIndex((e) => e == getDayName(days[days.length - 1].date));
-  const start = Date.now();
-
   const beforeDays =
     month > 1 ? daysInMonth(month - 1, year) : daysInMonth(month, year - 1);
 
   const afterDays =
     month < 12 ? daysInMonth(month + 1, year) : daysInMonth(month, year + 1);
-  console.log(`getDaysArray took ${Date.now() - start}`);
 
   for (let i = 0; i < startDay; i++) {
     let date = new Date(beforeDays[beforeDays.length - 1 - i].date);
