@@ -5,12 +5,11 @@ function daysInMonth<DaysItem>(month: number, year: number) {
   var date = new Date(year, month, 1);
   var days = [];
   while (date.getMonth() === month) {
-    let dateName = date.toDateString();
-    if (getDayName(dateName) === _days[5]) {
+    let dateName = getDayName(date.toDateString());
+    if (dateName === _days[5]) {
       date.setDate(date.getDate() + 2);
       continue;
-    }
-    if (getDayName(dateName) === _days[6]) {
+    } else if (dateName === _days[6]) {
       date.setDate(date.getDate() + 1);
       continue;
     }
@@ -19,7 +18,8 @@ function daysInMonth<DaysItem>(month: number, year: number) {
       date: new Date(date),
       dine: [],
     });
-    date.setDate(date.getDate() + 1);
+    const increase = dateName === _days[4] ? 3 : 1;
+    date.setDate(date.getDate() + increase);
   }
   return days;
 }

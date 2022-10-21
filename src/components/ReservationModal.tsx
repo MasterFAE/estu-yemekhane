@@ -1,11 +1,9 @@
 import React from "react";
-import { FaHamburger, FaTrash } from "react-icons/fa";
+import { FaHamburger } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useSelector } from "react-redux";
 import dineTypeToString from "../lib/dineTypeToString";
 import getDayName from "../lib/getDayName";
-import cart from "../pages/api/cart";
-import { Dine_W_Food } from "../redux/cart/cartSlice";
 import { storeType } from "../redux/store";
 import ModalWrapper from "./ModalWrapper";
 

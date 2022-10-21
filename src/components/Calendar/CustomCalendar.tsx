@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useId } from "react";
-import daysInMonth from "../../lib/daysInMonth";
+import React, { useState, useEffect } from "react";
 import DayComponent from "./DayComponent";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import getDaysArray, { DaysItem } from "../../lib/getDaysArray";
+import getDaysArray from "../../lib/getDaysArray";
 import { DINEHOURS } from ".prisma/client";
-import { useDispatch, useSelector } from "react-redux";
-import { storeType } from "../../redux/store";
+import { useDispatch } from "react-redux";
 import { getReservation } from "../../redux/user/userSlice";
 
 type Props = { data: any[] };
@@ -34,15 +32,13 @@ const CustomCalendar = (props: Props) => {
     dispatch(getReservation());
   }, []);
 
-  const [days, setDays] = useState(
-    getDaysArray(props.data, currentMonth, date.getFullYear())
-  );
+  const [days, setDays] = useState([]);
 
   useEffect(() => {
     setDays(getDaysArray(props.data, currentMonth, date.getFullYear()));
   }, [currentMonth]);
   return (
-    <div className="flex flex-col">
+    <div className="flex h-full flex-col">
       <div className="flex w-fit flex-row justify-between gap-x-2 self-center">
         {currentMonth > 0 ? (
           <div

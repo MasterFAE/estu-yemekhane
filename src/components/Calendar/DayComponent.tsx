@@ -1,7 +1,7 @@
 import { DINEHOURS, ReservedDine } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaSearch, FaTicketAlt } from "react-icons/fa";
-import { MdClose, MdDone } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../../lib/addSystemMessage";
 import getDayName from "../../lib/getDayName";
@@ -135,11 +135,14 @@ const DayComponent = (props: Props) => {
                   {owned ? (
                     <button
                       disabled
-                      className="block w-fit rounded-lg bg-yellow-600 px-4 py-2 ">
-                      <FaTicketAlt size={16} className="text-neutral-900" />
+                      className="w-full rounded-lg bg-yellow-600 px-4 py-2  ">
+                      <FaTicketAlt
+                        size={16}
+                        className="w-full text-center text-neutral-900"
+                      />
                     </button>
                   ) : (
-                    <div className="transition-all">
+                    <>
                       {inCart ? (
                         <button
                           disabled={loadingaction}
@@ -147,8 +150,11 @@ const DayComponent = (props: Props) => {
                           style={{
                             cursor: !loadingaction ? "pointer" : "wait",
                           }}
-                          className="items-center justify-center rounded-lg border border-red-700 bg-neutral-800 px-4 py-2 text-red-700 transition-all hover:border-red-800 hover:bg-red-800 hover:text-red-400 focus:ring-2 focus:ring-neutral-300">
-                          <MdClose size={16} />
+                          className="w-full rounded-lg bg-red-700  px-4 py-2  transition-all hover:bg-red-800  focus:ring-2 focus:ring-neutral-300">
+                          <MdClose
+                            className="w-full  text-center text-neutral-200 "
+                            size={16}
+                          />
                         </button>
                       ) : (
                         <button
@@ -157,16 +163,19 @@ const DayComponent = (props: Props) => {
                           style={{
                             cursor: !loadingaction ? "pointer" : "wait",
                           }}
-                          className="block w-fit  rounded-lg border border-emerald-700  px-4 py-2 transition-all hover:bg-green-700 ">
-                          <FaPlus className="text-green-900" />
+                          className="w-full rounded-lg bg-green-700  px-4 py-2 transition-all hover:bg-green-800 ">
+                          <FaPlus
+                            className="w-full text-center text-neutral-200"
+                            size={16}
+                          />
                         </button>
                       )}
-                    </div>
+                    </>
                   )}
 
-                  <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600">
+                  {/* <div className="w-fit cursor-pointer items-center justify-center rounded-lg  border border-blue-600  px-4 py-2 transition-all hover:bg-blue-600">
                     <FaSearch className=" text-blue-900" size={16} />
-                  </div>
+                  </div> */}
                 </div>
               ) : (
                 <div className="flex h-full w-full flex-row items-center justify-between gap-x-2 border-t border-neutral-900 bg-neutral-800 px-4 py-2"></div>

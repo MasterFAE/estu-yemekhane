@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { signOut } from "next-auth/react";
 import Router from "next/router";
-import type { Dine_W_Food } from "../cart/cartSlice";
 
 const initialState = {
   id: "",
@@ -22,9 +19,6 @@ export const getReservation = createAsyncThunk(
       const response = await fetch(`/api/reservation`, {
         method: "GET",
       });
-      // if (response.status == 400) {
-      //   Router.replace("/login");
-      // }
       const result = await response.json();
       return result;
     } catch (error) {
@@ -65,6 +59,7 @@ const userSlice = createSlice({
       state.image = image;
       state.reservation = reservation;
       state.department = department;
+      state.loggedIn = true;
     });
     builder.addCase(getReservation.fulfilled, (state, action) => {
       state.reservation = action.payload.reservation;

@@ -1,7 +1,5 @@
-import { Dine, Food } from "@prisma/client";
-import result from "postcss/lib/result";
 import React, { useState } from "react";
-import { FaCross, FaHamburger, FaMarker, FaTrash } from "react-icons/fa";
+import { FaHamburger, FaTrash } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import addSystemMessage from "../lib/addSystemMessage";

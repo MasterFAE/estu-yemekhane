@@ -5,7 +5,6 @@ import CustomCalendar from "../components/Calendar/CustomCalendar";
 import { signOut } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { storeType } from "../redux/store";
-import Router from "next/router";
 import { FaHamburger, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import CartModal from "../components/CartModal";
 import { getCartItems } from "../redux/cart/cartSlice";
@@ -46,7 +45,6 @@ const Home: NextPage = (props: any) => {
 
   const handleLogOut = async () => {
     signOut();
-    // Router.push("/login");
     return;
   };
 
