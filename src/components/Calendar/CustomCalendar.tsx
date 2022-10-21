@@ -26,17 +26,17 @@ const CustomCalendar = (props: Props) => {
   const date = new Date();
   const [currentMonth, setcurrentMonth] = useState(date.getMonth());
   const [dineType, selectDineType] = useState(DINEHOURS.BREAKFAST);
+  const [days, setDays] = useState([]);
   const dispatch: any = useDispatch();
 
   useEffect(() => {
     dispatch(getReservation());
   }, []);
 
-  const [days, setDays] = useState([]);
-
   useEffect(() => {
     setDays(getDaysArray(props.data, currentMonth, date.getFullYear()));
   }, [currentMonth]);
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex w-fit flex-row justify-between gap-x-2 self-center">
@@ -82,9 +82,9 @@ const CustomCalendar = (props: Props) => {
           return (
             <DayComponent
               dineType={dineType}
-              day={element.date}
-              dine={element.dine}
-              key={key.toString()}
+              day={element?.date}
+              dine={element?.dine}
+              key={element.id}
               dayNo={key + 1}
             />
           );
