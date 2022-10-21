@@ -33,7 +33,7 @@ export const getCurrentUser = createAsyncThunk(
   "user/currentUser",
   async (_, thunkAPI) => {
     try {
-      const response = await fetch(`/api/user/`, { method: "GET" });
+      const response = await fetch(`/api/user`, { method: "GET" });
       if (response.status == 400) {
         Router.replace("/login");
       }
