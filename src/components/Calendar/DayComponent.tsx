@@ -70,7 +70,6 @@ const DayComponent = (props: Props) => {
         title: "Error has occurred while deleting item.",
       });
       setAction(false);
-
       return;
     }
     addSystemMessage(dispatch, {

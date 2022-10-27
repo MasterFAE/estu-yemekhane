@@ -3,6 +3,7 @@ import Head from "next/head";
 import Router from "next/router";
 import React, { Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getCartItems } from "../redux/cart/cartSlice";
 import { storeType } from "../redux/store";
 import { getCurrentUser } from "../redux/user/userSlice";
 import Footer from "./Footer";
@@ -20,6 +21,7 @@ const Layout = (props: Props) => {
   useEffect(() => {
     if (session.status != "loading" && session.data) {
       dispatch(getCurrentUser());
+      dispatch(getCartItems());
     }
     if (session.status == "unauthenticated") Router.push("/login");
   }, [session]);
