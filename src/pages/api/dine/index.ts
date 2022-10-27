@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerAuthSession } from "../../../server/common/get-server-auth-session";
 import { prisma } from "../../../server/db/client";
 
-export default async function userHandler(
+export default async function dineHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -12,6 +12,7 @@ export default async function userHandler(
   switch (req.method) {
     case "GET":
       const dines = await prisma.dine.findMany({ include: { foods: true } });
+
       res.status(200).json(dines);
       break;
 
