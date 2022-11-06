@@ -1,0 +1,12 @@
+name: weekly-cron
+on:
+  schedule:
+    - cron: "0 0 * * SAT"
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call our API route
+        run: |
+          curl --request GET \
+          --url 'https://estu-yemekhane.vercel.app//api/dine/cron'
