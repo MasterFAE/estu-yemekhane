@@ -9,4 +9,4 @@ jobs:
       - name: Call our API route
         run: |
           curl --request GET \
-          --url 'https://estu-yemekhane.vercel.app//api/dine/cron'
+          --url 'https://estu-yemekhane.vercel.app/api/dine/cron'
