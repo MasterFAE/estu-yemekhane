@@ -31,12 +31,12 @@ import Router from "next/router";
 */
 
 const Home: NextPage = (props: any) => {
+  const user = useSelector((state: storeType) => state.user);
   const { data, error } = useSWR("/api/dine", fetcher);
   const [value, onChange] = useState(new Date());
   const [cartModal, openCartModal] = useState(false);
   const [reservationModal, openreservationModal] = useState(false);
   const cart = useSelector((state: storeType) => state.cart);
-  const user = useSelector((state: storeType) => state.user);
   const dispatch = useDispatch<any>();
   useEffect(() => {
     if (user.loggedIn) {
@@ -46,12 +46,11 @@ const Home: NextPage = (props: any) => {
 
   const handleLogOut = async () => {
     signOut();
-    return;
   };
 
   if (error) {
     Router.push("/login");
-    return;
+    return <></>;
   }
   if (!data) return <Loading />;
   return (

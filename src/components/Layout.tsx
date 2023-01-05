@@ -24,7 +24,6 @@ const Layout = (props: Props) => {
       dispatch(getCartItems());
     }
     if (session.status == "unauthenticated") {
-      signOut();
       Router.push("/login");
     }
   }, [session]);
