@@ -12,6 +12,7 @@ import ReservationModal from "../components/ReservationModal";
 import useSWR from "swr";
 import fetcher from "../lib/fetcher";
 import Loading from "../components/Loading";
+import Router from "next/router";
 
 /*
 
@@ -48,7 +49,10 @@ const Home: NextPage = (props: any) => {
     return;
   };
 
-  if (error) return <Loading />;
+  if (error) {
+    Router.push("/login");
+    return;
+  }
   if (!data) return <Loading />;
   return (
     <Layout>

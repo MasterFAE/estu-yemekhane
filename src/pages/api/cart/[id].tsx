@@ -11,7 +11,8 @@ const CartItem = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!session) res.status(401);
   const { method } = req;
   let id = session?.user?.id;
-  let dineId: number = parseInt(req.query.id);
+  // let dineId: number = parseInt(req.query.id);
+  let dineId = req.query.id;
   const userCart = await prisma.cart.findFirst({
     where: { userId: id },
     include: { dine: true },

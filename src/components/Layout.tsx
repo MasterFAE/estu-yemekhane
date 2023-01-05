@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Router from "next/router";
 import React, { Suspense, useEffect } from "react";
@@ -23,7 +23,10 @@ const Layout = (props: Props) => {
       dispatch(getCurrentUser());
       dispatch(getCartItems());
     }
-    if (session.status == "unauthenticated") Router.push("/login");
+    if (session.status == "unauthenticated") {
+      signOut();
+      Router.push("/login");
+    }
   }, [session]);
 
   if (session.status == "loading") return <Loading />;

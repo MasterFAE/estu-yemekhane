@@ -76,10 +76,10 @@ model VerificationToken {
 }
 
 model ReservedDine {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  dineId    Int
+  dineId    String
   Dine      Dine     @relation(fields: [dineId], references: [id])
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -104,7 +104,7 @@ model Cart {
 }
 
 model Dine {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(uuid())
   foods        Food[]
   reservations ReservedDine[]
   type         DINEHOURS
